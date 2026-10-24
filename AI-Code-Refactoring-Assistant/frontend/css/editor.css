@@ -1,0 +1,251 @@
+/* Monaco Editor Workspace & File Explorer Styles */
+
+.editor-wrapper {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: calc(100vh - 61px); /* Height minus top navbar */
+  background-color: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* Collapsible File Explorer Sidebar */
+.file-explorer {
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.explorer-header {
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.explorer-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.explorer-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.explorer-btn:hover {
+  color: var(--text-main);
+  background-color: var(--bg-tertiary);
+}
+
+.file-list {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+  padding: 0.5rem 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.file-item:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-main);
+}
+
+.file-item.active {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--primary-blue);
+  border-left: 3px solid var(--primary-blue);
+  font-weight: 600;
+}
+
+.file-item-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-actions-hover {
+  display: none;
+  gap: 0.2rem;
+}
+
+.file-item:hover .file-actions-hover {
+  display: flex;
+}
+
+/* Editor Main Section */
+.editor-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Editor Toolbar */
+.editor-toolbar {
+  height: 48px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.active-file-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.select-input {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.select-input:focus {
+  border-color: var(--primary-blue);
+}
+
+/* Monaco Code Container */
+.monaco-container-box {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#monaco-editor-target {
+  width: 100%;
+  height: 100%;
+}
+
+/* Bottom Syntax Diagnostics & Console Panel */
+.diagnostics-panel {
+  height: 200px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: height 0.2s ease;
+}
+
+.diagnostics-header {
+  padding: 0.4rem 1rem;
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.diagnostics-tabs {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+}
+
+.diagnostics-tab {
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.diagnostics-tab.active {
+  color: var(--text-main);
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary-blue);
+}
+
+.diagnostics-content {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.diag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dotted var(--border-color);
+}
+
+.diag-error { color: var(--danger-red); }
+.diag-warning { color: var(--warning-amber); }
+.diag-success { color: var(--success-green); }
+
+/* Editor Status Bar */
+.editor-statusbar {
+  height: 24px;
+  background-color: var(--primary-blue);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.statusbar-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .editor-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .file-explorer {
+    display: none;
+  }
+}

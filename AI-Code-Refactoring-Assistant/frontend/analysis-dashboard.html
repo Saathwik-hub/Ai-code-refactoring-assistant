@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis Dashboard - Refactor.AI</title>
+  <meta name="description" content="Static code analysis dashboard. View quality scores, security vulnerabilities, complexity metrics, and recommendations.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/diff.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">&#9889;</div>
+      <span>Refactor<span style="color:var(--primary-blue)">.AI</span></span>
+      <span class="brand-badge">Phase 2</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link active">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link">AI Refactor</a></li>
+      <li><a href="optimizer.html" class="nav-link">Code Optimizer</a></li>
+      <li><a href="history.html" class="nav-link">History</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">&#9728;&#65039;</button>
+      <span id="nav-user-badge" style="font-weight:600;font-size:0.9rem;color:var(--primary-blue);">demodev</span>
+      <button id="logout-btn" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Log Out</button>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top:2rem;padding-bottom:4rem;">
+    <div style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+        <span style="font-size:2rem;">&#128202;</span>
+        <h1 style="font-size:1.8rem;font-weight:800;">Static Code Analysis</h1>
+      </div>
+      <p style="color:var(--text-muted);">Analyze code quality, security vulnerabilities, complexity metrics, and maintainability.</p>
+    </div>
+
+    <!-- Code Input Panel -->
+    <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">Paste Code to Analyze</h2>
+      <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="analysis-filename" value="snippet.py" placeholder="filename.py" style="padding:0.5rem 0.75rem;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-main);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.875rem;outline:none;width:180px;">
+        <select id="analysis-lang" class="select-input" style="padding:0.5rem;">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+        </select>
+        <button id="btn-run-analysis" class="btn btn-primary">Run Analysis</button>
+        <button id="btn-download-report" class="btn btn-outline" style="display:none;">Download Report</button>
+        <button id="btn-send-to-ai" class="btn btn-accent" style="display:none;">Send to AI Refactor</button>
+      </div>
+      <textarea id="analysis-code-input" placeholder="Paste source code here to analyze..." style="width:100%;height:240px;padding:1rem;background:var(--bg-primary);color:var(--text-main);border:1px solid var(--border-color);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:0.875rem;line-height:1.7;resize:vertical;outline:none;"></textarea>
+    </div>
+
+    <!-- Results (hidden initially) -->
+    <div id="analysis-results-wrapper" style="display:none;">
+
+      <!-- Health Score + Grade + Stats Bar -->
+      <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:1.5rem;" id="analysis-stats-bar"></div>
+
+      <!-- Charts Row -->
+      <div class="chart-grid" style="margin-bottom:1.5rem;">
+        <div class="chart-card">
+          <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:0.75rem;">Quality Scores</h3>
+          <canvas id="chart-quality"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:0.75rem;">Issue Distribution</h3>
+          <canvas id="chart-issues"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:0.75rem;">Complexity Breakdown</h3>
+          <canvas id="chart-complexity"></canvas>
+        </div>
+      </div>
+
+      <!-- Issues Table -->
+      <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+          <h2 style="font-size:1.1rem;font-weight:700;">Detected Issues</h2>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;" id="severity-filter-btns">
+            <button class="btn btn-outline sev-filter active" data-sev="all" style="padding:0.3rem 0.75rem;font-size:0.8rem;">All</button>
+            <button class="btn btn-outline sev-filter" data-sev="critical" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:#ef4444;border-color:#ef4444;">Critical</button>
+            <button class="btn btn-outline sev-filter" data-sev="high" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:#f97316;border-color:#f97316;">High</button>
+            <button class="btn btn-outline sev-filter" data-sev="medium" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:#f59e0b;border-color:#f59e0b;">Medium</button>
+            <button class="btn btn-outline sev-filter" data-sev="low" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:#3b82f6;border-color:#3b82f6;">Low</button>
+            <button class="btn btn-outline sev-filter" data-sev="info" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:#8b949e;border-color:#8b949e;">Info</button>
+          </div>
+        </div>
+        <div class="table-wrapper" style="border:none;">
+          <table class="data-table" id="issues-table">
+            <thead><tr><th>Severity</th><th>Category</th><th>Line</th><th>Description</th><th>Fix</th></tr></thead>
+            <tbody id="issues-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="card" style="padding:1.5rem;">
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">Recommendations</h2>
+        <div id="recommendations-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>Refactor.AI - Static Code Analysis Dashboard - Phase 2</p></div></footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chatAssistant.js"></script>
+  <script>
+    let currentReportId = null;
+    let allIssues = [];
+    let qualityChart, issueChart, complexChart;
+
+    const SEV_COLORS = { critical:'#ef4444', high:'#f97316', medium:'#f59e0b', low:'#3b82f6', info:'#8b949e' };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Pre-fill from localStorage if redirected from editor/refactor page
+      const storedCode = localStorage.getItem('analysis_code');
+      const storedLang = localStorage.getItem('analysis_language');
+      if (storedCode) {
+        document.getElementById('analysis-code-input').value = storedCode;
+        localStorage.removeItem('analysis_code');
+      }
+      if (storedLang) {
+        document.getElementById('analysis-lang').value = storedLang;
+        localStorage.removeItem('analysis_language');
+      }
+
+      document.getElementById('btn-run-analysis').addEventListener('click', runAnalysis);
+      document.getElementById('btn-download-report').addEventListener('click', () => {
+        if (currentReportId) API.downloadAnalysisReport(currentReportId, 'json');
+      });
+      document.getElementById('btn-send-to-ai').addEventListener('click', () => {
+        const code = document.getElementById('analysis-code-input').value;
+        const lang = document.getElementById('analysis-lang').value;
+        localStorage.setItem('refactor_code', code);
+        localStorage.setItem('refactor_language', lang);
+        if (currentReportId) localStorage.setItem('analysis_report_id', currentReportId);
+        window.location.href = 'ai-refactor.html';
+      });
+
+      document.querySelectorAll('.sev-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sev-filter').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderIssuesTable(btn.dataset.sev);
+        });
+      });
+    });
+
+    async function runAnalysis() {
+      const code = document.getElementById('analysis-code-input').value.trim();
+      const lang = document.getElementById('analysis-lang').value;
+      const filename = document.getElementById('analysis-filename').value.trim() || 'snippet.py';
+      if (!code) { App.showToast('Please paste code to analyze.', 'warning'); return; }
+
+      const btn = document.getElementById('btn-run-analysis');
+      btn.disabled = true; btn.textContent = 'Analyzing...';
+
+      try {
+        const report = await API.runAnalysis(code, filename, lang);
+        currentReportId = report.report_id || report.id;
+        allIssues = report.issues || [];
+        renderResults(report);
+        document.getElementById('analysis-results-wrapper').style.display = 'block';
+        document.getElementById('btn-download-report').style.display = '';
+        document.getElementById('btn-send-to-ai').style.display = '';
+        App.showToast('Analysis complete!', 'success');
+      } catch (err) {
+        console.warn("Backend analysis failed, using client-side analyzer:", err);
+        try {
+          const report = clientSideAnalyze(code, filename, lang);
+          currentReportId = report.id;
+          allIssues = report.issues || [];
+          renderResults(report);
+          document.getElementById('analysis-results-wrapper').style.display = 'block';
+          document.getElementById('btn-download-report').style.display = '';
+          document.getElementById('btn-send-to-ai').style.display = '';
+          App.showToast('Analysis complete (via Local Engine)!', 'success');
+        } catch (clientErr) {
+          console.error("Client analysis failed:", clientErr);
+          App.showToast('Analysis failed: ' + err.message, 'danger');
+        }
+      } finally {
+        btn.disabled = false; btn.textContent = 'Run Analysis';
+      }
+    }
+
+    function clientSideAnalyze(code, filename, lang) {
+      const lines = code.split('\n');
+      const issues = [];
+      let cyclomatic = 1;
+      let maxNesting = 0;
+      let fnCount = 0;
+      let classCount = 0;
+      let fnLengths = [];
+      let currentFnLen = 0;
+      let inFn = false;
+
+      lines.forEach((line, idx) => {
+        const lineNum = idx + 1;
+        const trimmed = line.trim();
+        const indent = line.length - line.trimStart().length;
+        const depth = Math.floor(indent / 4);
+        if (depth > maxNesting) maxNesting = depth;
+
+        // Functions & Classes
+        if (/\b(def|function|class)\b/.test(trimmed)) {
+          if (trimmed.startsWith('class ')) classCount++;
+          else {
+            fnCount++;
+            if (inFn && currentFnLen > 0) fnLengths.push(currentFnLen);
+            inFn = true;
+            currentFnLen = 0;
+          }
+        } else if (inFn) {
+          if (trimmed.length > 0) currentFnLen++;
+        }
+
+        // Cyclomatic complexity triggers
+        if (/\b(if|elif|else if|while|for|catch|case|&&|\|\|)\b/.test(trimmed)) {
+          cyclomatic++;
+        }
+
+        // Nested loop detection
+        if (/\b(for|while)\b/.test(trimmed) && depth >= 1) {
+          issues.push({
+            id: 'nested_loop_' + lineNum,
+            rule_id: 'PERF-nested-loops',
+            category: 'Performance',
+            severity: 'High',
+            line: lineNum,
+            message: 'Nested loop detected (O(n²) complexity). Consider using a Hash Map or Set.',
+            recommendation: 'Replace nested iteration with O(1) dictionary/set lookups or vectorized operations.'
+          });
+        }
+
+        // Deep nesting
+        if (depth >= 4 && trimmed.length > 0) {
+          issues.push({
+            id: 'nesting_' + lineNum,
+            rule_id: 'MAINT-deep-nesting',
+            category: 'Maintainability',
+            severity: 'Medium',
+            line: lineNum,
+            message: `Deep indentation level (${depth} levels). Cognitive complexity is elevated.`,
+            recommendation: 'Extract nested logic into a helper function or use early return guard clauses.'
+          });
+        }
+
+        // Hardcoded secret check
+        if (/(password|secret|api_key|token)\s*=\s*['"][^'"]+['"]/i.test(trimmed)) {
+          issues.push({
+            id: 'sec_' + lineNum,
+            rule_id: 'SEC-hardcoded-credential',
+            category: 'Security',
+            severity: 'Critical',
+            line: lineNum,
+            message: 'Possible hardcoded credential or secret detected.',
+            recommendation: 'Move credentials to environment variables or a secure key store.'
+          });
+        }
+
+        // Loose equality in JS
+        if (lang === 'javascript' && trimmed.includes(' == ') && !trimmed.includes(' === ')) {
+          issues.push({
+            id: 'js_eq_' + lineNum,
+            rule_id: 'LINT-loose-equality',
+            category: 'Best Practice',
+            severity: 'Low',
+            line: lineNum,
+            message: 'Use of loose equality == can cause subtle type coercion bugs.',
+            recommendation: 'Use strict equality === instead of ==.'
+          });
+        }
+
+        // Single letter variable
+        if (/(?:^|\s)(?:var|let|const|[a-z])\s+([a-zA-Z])\s*=\s*/.test(trimmed)) {
+          issues.push({
+            id: 'var_name_' + lineNum,
+            rule_id: 'STYLE-naming',
+            category: 'Readability',
+            severity: 'Info',
+            line: lineNum,
+            message: 'Single-letter variable name reduces code readability.',
+            recommendation: 'Use a descriptive, self-documenting name that reveals domain intent.'
+          });
+        }
+      });
+
+      if (inFn && currentFnLen > 0) fnLengths.push(currentFnLen);
+
+      const critCount = issues.filter(i => i.severity === 'Critical').length;
+      const highCount = issues.filter(i => i.severity === 'High').length;
+      const medCount = issues.filter(i => i.severity === 'Medium').length;
+      const lowCount = issues.filter(i => i.severity === 'Low').length;
+      const infoCount = issues.filter(i => i.severity === 'Info').length;
+
+      // Calculate health score
+      let penalty = critCount * 25 + highCount * 12 + medCount * 6 + lowCount * 2;
+      if (cyclomatic > 10) penalty += (cyclomatic - 10) * 3;
+      const healthScore = Math.max(10, Math.min(100, 100 - penalty));
+
+      let grade = 'A';
+      if (healthScore < 60) grade = 'F';
+      else if (healthScore < 70) grade = 'D';
+      else if (healthScore < 80) grade = 'C';
+      else if (healthScore < 90) grade = 'B';
+
+      const avgFnLen = fnLengths.length ? Math.round(fnLengths.reduce((a, b) => a + b, 0) / fnLengths.length) : lines.length;
+
+      const recommendations = [];
+      if (cyclomatic > 7) recommendations.push({ title: 'Reduce Cyclomatic Complexity', description: `Current complexity is ${cyclomatic}. Break down complex conditionals into smaller functions.` });
+      if (highCount > 0) recommendations.push({ title: 'Refactor Nested Loops', description: 'Replace O(n²) double loops with O(n) Hash Map or Set lookups.' });
+      if (critCount > 0) recommendations.push({ title: 'Secure Hardcoded Credentials', description: 'Replace plaintext secrets with environment variables.' });
+      if (!recommendations.length) recommendations.push({ title: 'Maintain Code Quality', description: 'Code demonstrates good practices. Consider adding comprehensive unit tests.' });
+
+      return {
+        id: 'report_client_' + Date.now().toString(36),
+        filename: filename,
+        language: lang,
+        health_score: healthScore,
+        grade: grade,
+        total_issues: issues.length,
+        critical_count: critCount,
+        high_count: highCount,
+        medium_count: medCount,
+        low_count: lowCount,
+        info_count: infoCount,
+        scores: {
+          overall_health: healthScore,
+          readability: Math.max(20, 95 - medCount * 5 - infoCount * 2),
+          maintainability: Math.max(20, 90 - (cyclomatic > 5 ? (cyclomatic - 5) * 4 : 0)),
+          security: Math.max(15, 100 - critCount * 40 - highCount * 15),
+          complexity: Math.max(20, 100 - cyclomatic * 5),
+          documentation: 70
+        },
+        metrics: {
+          cyclomatic_complexity: cyclomatic,
+          max_nesting_depth: maxNesting,
+          function_count: fnCount || 1,
+          class_count: classCount,
+          avg_function_length: avgFnLen
+        },
+        complexity: {
+          cyclomatic_complexity: cyclomatic,
+          nesting_depth: maxNesting,
+          function_count: fnCount || 1,
+          class_count: classCount,
+          average_function_length: avgFnLen
+        },
+        issues: issues,
+        recommendations: recommendations,
+        created_at: new Date().toISOString()
+      };
+    }
+
+    function renderResults(report) {
+      const scores = report.scores || {};
+      const metrics = report.complexity || report.metrics || {};
+      const statsBar = document.getElementById('analysis-stats-bar');
+      const grade = report.grade || 'B';
+      const health = report.health_score || scores.overall_health || 0;
+      statsBar.innerHTML = `
+        <div class="stat-card"><div class="stat-icon" style="font-size:1.8rem;font-weight:900;color:var(--primary-blue);">${grade}</div><div><div class="stat-value">${health}%</div><div class="stat-label">Health Score</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(239,68,68,0.15);color:#ef4444;">&#9888;</div><div><div class="stat-value">${report.critical_count || 0}</div><div class="stat-label">Critical Issues</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,0.15);color:var(--warning-amber);">&#128293;</div><div><div class="stat-value">${(report.total_issues || allIssues.length)}</div><div class="stat-label">Total Issues</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,0.15);color:var(--success-green);">&#128274;</div><div><div class="stat-value">${scores.security || 0}%</div><div class="stat-label">Security Score</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple">&#128200;</div><div><div class="stat-value">${metrics.cyclomatic_complexity || 0}</div><div class="stat-label">Cyclomatic Complexity</div></div></div>
+      `;
+
+      renderCharts(scores, report);
+      renderIssuesTable('all');
+      renderRecommendations(report.recommendations || []);
+    }
+
+    function renderCharts(scores, report) {
+      if (qualityChart) qualityChart.destroy();
+      if (issueChart) issueChart.destroy();
+      if (complexChart) complexChart.destroy();
+
+      const chartDefaults = { responsive:true, plugins:{ legend:{ labels:{ color:'#8b949e' } } } };
+
+      qualityChart = new Chart(document.getElementById('chart-quality'), {
+        type:'radar',
+        data:{
+          labels:['Readability','Maintainability','Security','Complexity','Documentation'],
+          datasets:[{ label:'Score', data:[scores.readability||0,scores.maintainability||0,scores.security||0,scores.complexity||0,scores.documentation||0], fill:true, backgroundColor:'rgba(59,130,246,0.2)', borderColor:'#3b82f6', pointBackgroundColor:'#3b82f6' }]
+        },
+        options:{ ...chartDefaults, scales:{ r:{ min:0, max:100, ticks:{ color:'#8b949e', backdropColor:'transparent' }, grid:{ color:'#30363d' }, pointLabels:{ color:'#8b949e' } } } }
+      });
+
+      const counts = { critical: report.critical_count||0, high: report.high_count||0, medium: report.medium_count||0, low: report.low_count||0, info: report.info_count||0 };
+      issueChart = new Chart(document.getElementById('chart-issues'), {
+        type:'doughnut',
+        data:{
+          labels:['Critical','High','Medium','Low','Info'],
+          datasets:[{ data:Object.values(counts), backgroundColor:['#ef4444','#f97316','#f59e0b','#3b82f6','#8b949e'] }]
+        },
+        options:{ ...chartDefaults }
+      });
+
+      const metrics = report.complexity || report.metrics || {};
+      complexChart = new Chart(document.getElementById('chart-complexity'), {
+        type:'bar',
+        data:{
+          labels:['Cyclomatic','Nesting Depth','Functions','Classes','Avg Fn Length'],
+          datasets:[{ label:'Value', data:[metrics.cyclomatic_complexity||0, metrics.nesting_depth||metrics.max_nesting_depth||0, metrics.function_count||0, metrics.class_count||0, metrics.average_function_length||metrics.avg_function_length||0], backgroundColor:'#8b5cf6' }]
+        },
+        options:{ ...chartDefaults, scales:{ x:{ ticks:{ color:'#8b949e' }, grid:{ color:'#30363d' } }, y:{ ticks:{ color:'#8b949e' }, grid:{ color:'#30363d' } } } }
+      });
+    }
+
+    function renderIssuesTable(filter) {
+      const tbody = document.getElementById('issues-tbody');
+      const filtered = filter === 'all' ? allIssues : allIssues.filter(i => (i.severity||'').toLowerCase() === filter);
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">No issues found for this filter.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = filtered.map(issue => {
+        const sev = (issue.severity || 'info').toLowerCase();
+        const color = SEV_COLORS[sev] || '#8b949e';
+        return `<tr>
+          <td><span style="display:inline-block;padding:0.2rem 0.55rem;border-radius:var(--radius-full);font-size:0.75rem;font-weight:700;background:${color}22;color:${color};border:1px solid ${color};">${sev.toUpperCase()}</span></td>
+          <td style="font-size:0.85rem;">${issue.category || 'Quality'}</td>
+          <td style="font-family:var(--font-mono);font-size:0.85rem;">${issue.line || '-'}</td>
+          <td style="font-size:0.85rem;">${issue.message || issue.description || ''}</td>
+          <td style="font-size:0.8rem;color:var(--text-muted);">${issue.recommendation || ''}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function renderRecommendations(recs) {
+      const list = document.getElementById('recommendations-list');
+      if (!recs.length) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-size:0.875rem;">No specific recommendations. Great code quality!</p>';
+        return;
+      }
+      list.innerHTML = recs.map((r, i) => `
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.85rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:var(--primary-blue-glow);color:var(--primary-blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">${i+1}</div>
+          <div>
+            <div style="font-weight:600;font-size:0.9rem;margin-bottom:0.2rem;">${r.title || r}</div>
+            ${r.description ? `<div style="font-size:0.8rem;color:var(--text-muted);">${r.description}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

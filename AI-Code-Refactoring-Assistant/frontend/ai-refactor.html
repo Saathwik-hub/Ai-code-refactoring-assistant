@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Refactoring Engine - Refactor.AI</title>
+  <meta name="description" content="AI-powered code refactoring using local Ollama models. Side-by-side diff viewer, explanation panel, quality comparison, and multi-mode refactoring.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/diff.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">&#9889;</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+      <span class="brand-badge">Phase 3</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link active">AI Refactor</a></li>
+      <li><a href="optimizer.html" class="nav-link">Code Optimizer</a></li>
+      <li><a href="history.html" class="nav-link">History</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">&#9728;&#65039;</button>
+      <span id="nav-user-badge" style="font-weight:600;font-size:0.9rem;color:var(--primary-blue);">demodev</span>
+      <button id="logout-btn" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Log Out</button>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top:2rem;padding-bottom:4rem;">
+    <div style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+        <span style="font-size:2rem;">&#129302;</span>
+        <h1 style="font-size:1.8rem;font-weight:800;">AI Refactoring Engine</h1>
+        <span id="ai-status-badge" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.25rem 0.75rem;border-radius:var(--radius-full);font-size:0.75rem;font-weight:700;background:rgba(245,158,11,0.15);color:var(--warning-amber);border:1px solid var(--warning-amber);">&#9679; Checking...</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.95rem;">Powered by local Ollama LLMs (Qwen2.5-Coder / DeepSeek-Coder). Fully offline &amp; free.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;">
+      <!-- LEFT: Code Input -->
+      <div>
+        <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h2 style="font-size:1.1rem;font-weight:700;">Source Code</h2>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <span id="refactor-filename" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);background:var(--bg-tertiary);padding:0.2rem 0.6rem;border-radius:var(--radius-sm);">snippet.py</span>
+              <select id="refactor-lang-select" class="select-input" style="padding:0.35rem 0.6rem;font-size:0.85rem;">
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+              </select>
+            </div>
+          </div>
+          <textarea id="refactor-code-input" placeholder="Paste your source code here, or load from Editor..." style="width:100%;height:320px;padding:1rem;background:var(--bg-primary);color:var(--text-main);border:1px solid var(--border-color);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:0.875rem;line-height:1.7;resize:vertical;outline:none;tab-size:4;"></textarea>
+          <div style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap;">
+            <button id="btn-run-refactor" class="btn btn-primary" style="flex:1;min-width:160px;">Refactor Code</button>
+            <button id="btn-analyze-first" class="btn btn-accent" style="padding:0.6rem 1rem;">Analyze First</button>
+            <button class="btn btn-outline" style="padding:0.6rem 1rem;" onclick="document.getElementById('refactor-code-input').value=''">Clear</button>
+          </div>
+        </div>
+
+        <!-- Results (hidden until refactor runs) -->
+        <div id="refactor-results-section" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+            <div>
+              <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.25rem;">Refactoring Result</h2>
+              <p id="refactor-result-summary" style="font-size:0.875rem;color:var(--text-muted);"></p>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <button id="btn-copy-refactored" class="btn btn-outline" style="padding:0.5rem 0.85rem;font-size:0.85rem;">Copy</button>
+              <button id="btn-download-refactored" class="btn btn-outline" style="padding:0.5rem 0.85rem;font-size:0.85rem;">Download</button>
+              <button id="btn-regenerate" class="btn btn-accent" style="padding:0.5rem 0.85rem;font-size:0.85rem;">Regenerate</button>
+              <button id="btn-accept-changes" class="btn btn-primary" style="padding:0.5rem 0.85rem;font-size:0.85rem;">Accept</button>
+              <button id="btn-reject-changes" class="btn btn-outline" style="padding:0.5rem 0.85rem;font-size:0.85rem;color:var(--danger-red);">Reject</button>
+            </div>
+          </div>
+          <div class="diff-summary-bar" id="diff-summary-stats">
+            <span style="color:var(--text-muted);">Run refactoring to see changes.</span>
+          </div>
+          <div id="diff-viewer-container" style="margin-bottom:1.5rem;"></div>
+          <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+            <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:1.25rem;">Quality Comparison</h2>
+            <div id="quality-comparison-section"></div>
+          </div>
+          <div class="card" style="padding:1.5rem;">
+            <h2 style="font-size:1.05rem;font-weight:700;margin-bottom:1rem;">AI Explanations</h2>
+            <div id="explanation-list" class="explanation-panel"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Mode + Settings -->
+      <div>
+        <div class="card" style="padding:1.25rem;margin-bottom:1.25rem;">
+          <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Refactoring Mode</h3>
+          <div id="mode-selector-grid" class="mode-grid" style="grid-template-columns:1fr 1fr;"></div>
+        </div>
+
+        <div class="card" style="padding:1.25rem;margin-bottom:1.25rem;">
+          <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">AI Settings</h3>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div>
+              <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.35rem;">Model</label>
+              <select id="setting-model" class="select-input" style="width:100%;padding:0.5rem;">
+                <option value="qwen2.5-coder">Qwen2.5-Coder (Recommended)</option>
+                <option value="deepseek-coder">DeepSeek-Coder</option>
+                <option value="codellama">CodeLlama</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.35rem;">Temperature: <span id="temp-val">0.2</span></label>
+              <input type="range" id="setting-temp" min="0" max="1" step="0.05" value="0.2" style="width:100%;accent-color:var(--primary-blue);" oninput="document.getElementById('temp-val').textContent=this.value">
+            </div>
+            <div>
+              <label style="font-size:0.8rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.35rem;">Max Tokens</label>
+              <select id="setting-max-tokens" class="select-input" style="width:100%;padding:0.5rem;">
+                <option value="1024">1024</option>
+                <option value="2048" selected>2048 (Default)</option>
+                <option value="4096">4096</option>
+              </select>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.85rem;font-weight:600;">Auto Explain</span>
+              <input type="checkbox" id="setting-auto-explain" checked style="width:18px;height:18px;accent-color:var(--primary-blue);">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.85rem;font-weight:600;">Auto Analyze</span>
+              <input type="checkbox" id="setting-auto-analyze" checked style="width:18px;height:18px;accent-color:var(--primary-blue);">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:1.25rem;">
+          <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Analysis Report</h3>
+          <div id="linked-analysis-panel" style="font-size:0.85rem;color:var(--text-muted);">No analysis linked. Run analysis first for smarter refactoring.</div>
+          <a href="analysis-dashboard.html" class="btn btn-outline" style="width:100%;margin-top:0.85rem;font-size:0.85rem;text-align:center;display:block;">Open Analysis Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>Refactor.AI - AI Refactoring Engine - Phase 3 - Powered by Local Ollama LLMs</p></div></footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/diffViewer.js"></script>
+  <script src="js/optimizer.js"></script>
+  <script src="js/aiRefactor.js"></script>
+  <script src="js/chatAssistant.js"></script>
+  <script>
+    (async function checkAIStatus() {
+      const badge = document.getElementById('ai-status-badge');
+      try {
+        const res = await fetch('/health');
+        const data = await res.json();
+        if (data.status === 'healthy') {
+          badge.style.background = 'rgba(16,185,129,0.15)';
+          badge.style.color = 'var(--success-green)';
+          badge.style.borderColor = 'var(--success-green)';
+          badge.textContent = 'Backend Online';
+        }
+      } catch (e) {
+        badge.style.background = 'rgba(239,68,68,0.15)';
+        badge.style.color = 'var(--danger-red)';
+        badge.style.borderColor = 'var(--danger-red)';
+        badge.textContent = 'Backend Offline';
+      }
+    })();
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btn-accept-changes')?.addEventListener('click', () => {
+        if (typeof currentRefactorResult !== 'undefined' && currentRefactorResult) {
+          localStorage.setItem('accepted_refactored_code', currentRefactorResult.refactored_code);
+          localStorage.setItem('accepted_refactored_lang', currentRefactorResult.language);
+          App.showToast('Changes accepted! Open the Editor to use the refactored code.', 'success');
+        }
+      });
+      document.getElementById('btn-reject-changes')?.addEventListener('click', () => {
+        document.getElementById('refactor-results-section').style.display = 'none';
+        App.showToast('Changes rejected. Original code preserved.', 'info');
+      });
+      document.getElementById('btn-analyze-first')?.addEventListener('click', () => {
+        const code = document.getElementById('refactor-code-input').value.trim();
+        if (!code) { App.showToast('Enter code first.', 'warning'); return; }
+        localStorage.setItem('analysis_code', code);
+        localStorage.setItem('analysis_language', document.getElementById('refactor-lang-select').value);
+        window.location.href = 'analysis-dashboard.html';
+      });
+    });
+  </script>
+</body>
+</html>

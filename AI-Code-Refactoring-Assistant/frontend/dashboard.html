@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - AI Code Refactoring Assistant</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link">AI Refactor</a></li>
+      <li><a href="optimizer.html" class="nav-link">Code Optimizer</a></li>
+      <li><a href="history.html" class="nav-link">History</a></li>
+      <li><a href="settings.html" class="nav-link">Settings</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">☀️</button>
+      <span id="nav-user-badge" style="font-weight: 600; font-size: 0.9rem; color: var(--primary-blue);">demodev</span>
+      <button id="logout-btn" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Log Out</button>
+      <button class="mobile-menu-btn">☰</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Welcome Header -->
+    <div class="dashboard-header">
+      <h1 class="welcome-title">Welcome back, <span id="welcome-username" style="color: var(--primary-blue);">Developer</span>!</h1>
+      <p class="dashboard-subtitle">Manage your source code files, run syntax validation, and prepare snippets for refactoring.</p>
+    </div>
+
+    <!-- Analytics & Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📂</div>
+        <div>
+          <div class="stat-value" id="stat-total-files">3</div>
+          <div class="stat-label">Uploaded Source Files</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">💻</div>
+        <div>
+          <div class="stat-value" id="stat-total-lines">45</div>
+          <div class="stat-label">Total Code Lines</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+          <div class="stat-value" id="stat-validated-files">3</div>
+          <div class="stat-label">Syntax Validated Snippets</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">🔤</div>
+        <div>
+          <div class="stat-value" id="stat-primary-lang">PYTHON</div>
+          <div class="stat-label">Primary Language</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="actions-row">
+      <h2 class="section-heading">Recent Source Files</h2>
+      <div style="display: flex; gap: 0.75rem;">
+        <button id="btn-trigger-upload-modal" class="btn btn-primary" onclick="document.getElementById('upload-modal-overlay').classList.add('active')">
+          <span>📤 Upload File</span>
+        </button>
+        <button id="btn-create-file" class="btn btn-accent">
+          <span>➕ New File / Project</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent Files Table -->
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Language</th>
+            <th>Size</th>
+            <th>Uploaded Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dashboard-recent-files">
+          <!-- Populated by fileManager.js -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Drag & Drop Upload Quick Zone -->
+    <div style="margin-top: 2rem;">
+      <h2 class="section-heading" style="margin-bottom: 1rem;">Drag & Drop File Upload</h2>
+      <div id="upload-dropzone" class="upload-dropzone">
+        <div class="dropzone-icon">☁️</div>
+        <div class="dropzone-text">Drag & drop source code file here, or click to browse</div>
+        <div class="dropzone-subtext">Supported formats: .py, .java, .js, .ts, .cpp, .c, .html, .css, .json (Max 5 MB)</div>
+        <input type="file" id="hidden-file-input" style="display: none;" accept=".py,.java,.js,.ts,.cpp,.c,.html,.css,.json">
+      </div>
+    </div>
+
+    <!-- Phase 3: Quick Action Cards -->
+    <div style="margin-top: 3rem;">
+      <h2 class="section-heading" style="margin-bottom: 1rem;">Phase 3 — AI Tools</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 3rem;">
+        <a href="ai-refactor.html" style="text-decoration:none;">
+          <div class="card" style="padding: 1.5rem; border-color: var(--primary-blue); transition: transform 0.2s; cursor:pointer;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">&#129302;</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;color:var(--primary-blue);">AI Refactoring Engine</div>
+            <div style="font-size:0.85rem;color:var(--text-muted);">Refactor code with Qwen2.5-Coder or DeepSeek-Coder. Side-by-side diff, explanations, and quality comparison.</div>
+          </div>
+        </a>
+        <a href="analysis-dashboard.html" style="text-decoration:none;">
+          <div class="card" style="padding: 1.5rem; border-color: var(--accent-purple); transition: transform 0.2s; cursor:pointer;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">&#128202;</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;color:var(--accent-purple);">Static Code Analysis</div>
+            <div style="font-size:0.85rem;color:var(--text-muted);">Detect code smells, security vulnerabilities, complexity metrics, and maintainability scores.</div>
+          </div>
+        </a>
+        <a href="history.html" style="text-decoration:none;">
+          <div class="card" style="padding: 1.5rem; border-color: var(--success-green); transition: transform 0.2s; cursor:pointer;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">&#128203;</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;color:var(--success-green);">Refactoring History</div>
+            <div style="font-size:0.85rem;color:var(--text-muted);">Browse all past AI refactoring sessions. View before/after diffs and reopen previous work.</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Activity Log Section -->
+    <div style="margin-bottom: 3rem;">
+      <h2 class="section-heading" style="margin-bottom: 1rem;">Recent System Activity</h2>
+      <div class="card" style="padding: 1.25rem;">
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.875rem;">
+          <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <span>&#x1F7E2; AI Refactoring Engine initialized with local Ollama support</span>
+            <span style="color: var(--text-muted);">Just now</span>
+          </li>
+          <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <span>&#x1F50D; Syntax check executed for <strong>demo_algorithm.py</strong> — Status: Valid ✓</span>
+            <span style="color: var(--text-muted);">2 mins ago</span>
+          </li>
+          <li style="display: flex; justify-content: space-between;">
+            <span>&#x1F4C1; Sample files loaded into workspace repository</span>
+            <span style="color: var(--text-muted);">5 mins ago</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Upload Modal Overlay -->
+  <div id="upload-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload Source Code File</h3>
+        <button class="modal-close" onclick="document.getElementById('upload-modal-overlay').classList.remove('active')">✖</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
+        Select a file from your machine to open in the Monaco editor.
+      </p>
+      <div class="upload-dropzone" style="padding: 1.5rem;" onclick="document.getElementById('hidden-file-input').click()">
+        <div class="dropzone-icon" style="font-size: 1.8rem;">📄</div>
+        <div class="dropzone-text" style="font-size: 0.9rem;">Click to select file</div>
+        <div class="dropzone-subtext">.py, .java, .js, .ts, .cpp, .c, .html, .css, .json</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Refactor.AI — Developer Dashboard · Phase 1 + Phase 2 + Phase 3</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/fileManager.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

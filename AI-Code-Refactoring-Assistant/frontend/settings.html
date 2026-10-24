@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Refactor.AI</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">&#9889;</div>
+      <span>Refactor<span style="color:var(--primary-blue)">.AI</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link">AI Refactor</a></li>
+      <li><a href="history.html" class="nav-link">History</a></li>
+      <li><a href="settings.html" class="nav-link active">Settings</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">&#9728;&#65039;</button>
+      <a href="editor.html" class="btn btn-primary" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Open Editor</a>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width:820px;padding-top:3rem;padding-bottom:4rem;">
+    <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:0.5rem;">Application Settings</h1>
+    <p style="color:var(--text-muted);margin-bottom:2rem;">Configure editor preferences, AI model parameters, and interface options.</p>
+
+    <div class="card" style="padding:2rem;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.2rem;font-weight:700;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;margin-bottom:1.5rem;">Editor Preferences</h2>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Default Theme</div><div style="font-size:0.85rem;color:var(--text-muted);">VS Code Dark or Light interface</div></div>
+          <button class="theme-toggle-btn" style="width:auto;padding:0.4rem 1rem;">Toggle Theme</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Default Language</div><div style="font-size:0.85rem;color:var(--text-muted);">Language for new editor buffers</div></div>
+          <select id="pref-default-lang" class="select-input" style="padding:0.4rem 0.8rem;">
+            <option value="python">Python</option><option value="javascript">JavaScript</option><option value="typescript">TypeScript</option><option value="java">Java</option><option value="cpp">C++</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Font Size</div><div style="font-size:0.85rem;color:var(--text-muted);">Monaco code text size in pixels</div></div>
+          <select id="pref-font-size" class="select-input" style="padding:0.4rem 0.8rem;">
+            <option value="12">12px</option><option value="14" selected>14px (Default)</option><option value="16">16px</option><option value="18">18px</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Tab Size</div><div style="font-size:0.85rem;color:var(--text-muted);">Spaces per indentation level</div></div>
+          <select id="pref-tab-size" class="select-input" style="padding:0.4rem 0.8rem;">
+            <option value="2">2 Spaces</option><option value="4" selected>4 Spaces</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Automated Syntax Validation</div><div style="font-size:0.85rem;color:var(--text-muted);">Live syntax parsing as you type</div></div>
+          <input type="checkbox" id="pref-auto-syntax" checked style="width:20px;height:20px;accent-color:var(--primary-blue);">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:2rem;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.2rem;font-weight:700;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;margin-bottom:1.5rem;">AI Refactoring Settings</h2>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Ollama Endpoint</div><div style="font-size:0.85rem;color:var(--text-muted);">Local Ollama server URL</div></div>
+          <input type="text" id="pref-ollama-url" value="http://127.0.0.1:11434" style="padding:0.4rem 0.8rem;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-main);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.85rem;outline:none;width:220px;">
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Default AI Model</div><div style="font-size:0.85rem;color:var(--text-muted);">Used for refactoring and chat</div></div>
+          <select id="pref-ai-model" class="select-input" style="padding:0.4rem 0.8rem;">
+            <option value="qwen2.5-coder">Qwen2.5-Coder (Recommended)</option><option value="deepseek-coder">DeepSeek-Coder</option><option value="codellama">CodeLlama</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Default Refactoring Mode</div><div style="font-size:0.85rem;color:var(--text-muted);">Pre-selected mode on AI Refactor page</div></div>
+          <select id="pref-refactor-mode" class="select-input" style="padding:0.4rem 0.8rem;">
+            <option value="Clean Code" selected>Clean Code</option><option value="Readability">Readability</option><option value="Performance">Performance</option><option value="Security">Security</option><option value="SOLID Principles">SOLID Principles</option><option value="Beginner Friendly">Beginner Friendly</option><option value="Senior Engineer Style">Senior Engineer Style</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Default Temperature</div><div style="font-size:0.85rem;color:var(--text-muted);">AI creativity: 0 = strict, 1 = creative</div></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <input type="range" id="pref-temp" min="0" max="1" step="0.05" value="0.2" style="width:120px;accent-color:var(--primary-blue);" oninput="document.getElementById('pref-temp-val').textContent=this.value">
+            <span id="pref-temp-val" style="font-weight:700;min-width:28px;">0.2</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Auto Explain Changes</div><div style="font-size:0.85rem;color:var(--text-muted);">Always generate explanations</div></div>
+          <input type="checkbox" id="pref-auto-explain" checked style="width:20px;height:20px;accent-color:var(--primary-blue);">
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-weight:600;">Auto Analyze Before Refactor</div><div style="font-size:0.85rem;color:var(--text-muted);">Run static analysis before AI refactoring</div></div>
+          <input type="checkbox" id="pref-auto-analyze" checked style="width:20px;height:20px;accent-color:var(--primary-blue);">
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:right;">
+      <button class="btn btn-primary" style="padding:0.65rem 2rem;" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>Refactor.AI - Application Settings</p></div></footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function saveSettings() {
+      const s = {
+        defaultLang: document.getElementById('pref-default-lang').value,
+        fontSize: document.getElementById('pref-font-size').value,
+        tabSize: document.getElementById('pref-tab-size').value,
+        autoSyntax: document.getElementById('pref-auto-syntax').checked,
+        ollamaUrl: document.getElementById('pref-ollama-url').value,
+        aiModel: document.getElementById('pref-ai-model').value,
+        refactorMode: document.getElementById('pref-refactor-mode').value,
+        temperature: document.getElementById('pref-temp').value,
+        autoExplain: document.getElementById('pref-auto-explain').checked,
+        autoAnalyze: document.getElementById('pref-auto-analyze').checked
+      };
+      localStorage.setItem('app_settings', JSON.stringify(s));
+      App.showToast('Settings saved successfully!', 'success');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const s = JSON.parse(localStorage.getItem('app_settings') || '{}');
+        if (s.defaultLang) document.getElementById('pref-default-lang').value = s.defaultLang;
+        if (s.fontSize) document.getElementById('pref-font-size').value = s.fontSize;
+        if (s.tabSize) document.getElementById('pref-tab-size').value = s.tabSize;
+        if (s.ollamaUrl) document.getElementById('pref-ollama-url').value = s.ollamaUrl;
+        if (s.aiModel) document.getElementById('pref-ai-model').value = s.aiModel;
+        if (s.refactorMode) document.getElementById('pref-refactor-mode').value = s.refactorMode;
+        if (s.temperature) { document.getElementById('pref-temp').value = s.temperature; document.getElementById('pref-temp-val').textContent = s.temperature; }
+        if (s.autoExplain !== undefined) document.getElementById('pref-auto-explain').checked = s.autoExplain;
+        if (s.autoAnalyze !== undefined) document.getElementById('pref-auto-analyze').checked = s.autoAnalyze;
+        if (s.autoSyntax !== undefined) document.getElementById('pref-auto-syntax').checked = s.autoSyntax;
+      } catch(e) {}
+    });
+  </script>
+</body>
+</html>

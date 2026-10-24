@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About & Phase 2 Roadmap - AI Code Refactoring Assistant</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="profile.html" class="nav-link">Profile</a></li>
+      <li><a href="settings.html" class="nav-link">Settings</a></li>
+      <li><a href="about.html" class="nav-link active">About</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">☀️</button>
+      <a href="editor.html" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Open Editor</a>
+    </div>
+  </nav>
+
+  <main class="container" style="max-width: 900px; padding-top: 3rem; padding-bottom: 4rem;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <div class="brand-badge" style="margin: 0 auto 1rem auto; padding: 0.35rem 0.85rem; font-size: 0.85rem;">System Architecture & Roadmap</div>
+      <h1 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 0.75rem;">AI Code Refactoring Assistant</h1>
+      <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 700px; margin: 0 auto;">
+        A high-performance developer workspace engineered to prepare source code files for next-generation automated AI code refactoring.
+      </p>
+    </div>
+
+    <!-- Phase 1 Deliverables Section -->
+    <div class="card" style="padding: 2rem; margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--success-green); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+        <span>✅</span> <span>Phase 1 (MVP) Completed Capabilities</span>
+      </h2>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem;">
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Monaco Editor Workspace:</strong> Full syntax highlighting, auto-indentation, line numbers, code folding, AMD loader integration, and theme sync.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Drag-and-Drop File Upload:</strong> Supports `.py`, `.java`, `.js`, `.ts`, `.cpp`, `.c`, `.html`, `.css`, and `.json` with file size validation (5MB max).</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Language Detection:</strong> Automated syntax matching and filename extension detection with manual language selector.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Syntax Validation Engine:</strong> Python AST parsing, JSON decoding, JS/TS/C/C++/Java bracket balance checks, and diagnostics panel.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Sidebar File Explorer:</strong> Tree view of uploaded files with create, rename, delete, download, and file opening actions.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Developer Dashboard:</strong> Metrics analytics, code line counters, language distribution badges, recent activity logs.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>Authentication & Themes:</strong> Developer login, registration, password visibility toggle, and persistent dark/light themes.</span>
+        </li>
+        <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--success-green); font-weight: 700;">✓</span>
+          <span><strong>FastAPI Backend:</strong> REST API routes (`/api/auth`, `/api/files`, `/api/syntax`) ready for modular AI integration.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Phase 2 Roadmap Section -->
+    <div class="card" style="padding: 2rem; border-color: var(--accent-purple); background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent);">
+      <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--accent-purple); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+        <span>🚀</span> <span>Phase 2 (Future Integration) Roadmap</span>
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+        
+        <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--primary-blue); margin-bottom: 0.35rem;">🤖 Ollama / LLM AI Refactoring</div>
+          <div style="font-size: 0.875rem; color: var(--text-muted);">Integrate local Ollama models (Llama 3, DeepSeek-Coder, CodeLlama) for automated code refactoring.</div>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--accent-purple); margin-bottom: 0.35rem;">📊 Code Complexity Analysis</div>
+          <div style="font-size: 0.875rem; color: var(--text-muted);">Cyclomatic complexity scores, maintainability index calculations, and code smell detection.</div>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--success-green); margin-bottom: 0.35rem;">🔄 Side-by-Side Diff Viewer</div>
+          <div style="font-size: 0.875rem; color: var(--text-muted);">Interactive visual code diffing showing original source vs AI-refactored output before accepting changes.</div>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--warning-amber); margin-bottom: 0.35rem;">💬 AI Chat Coding Assistant</div>
+          <div style="font-size: 0.875rem; color: var(--text-muted);">In-editor conversational side panel to ask questions about code structure, performance, and unit tests.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>AI Code Refactoring Assistant — Phase 1 MVP Foundation</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

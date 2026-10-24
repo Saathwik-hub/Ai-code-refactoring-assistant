@@ -1,0 +1,32 @@
+[
+  {
+    "id": "file_demo_py",
+    "filename": "demo_algorithm.py",
+    "original_name": "demo_algorithm.py",
+    "extension": ".py",
+    "language": "python",
+    "size_bytes": 482,
+    "uploaded_at": "2026-07-28T21:39:21.614086",
+    "content": "# AI Code Refactoring Assistant - Demo Script\ndef quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + middle + quick_sort(right)\n\nif __name__ == \"__main__\":\n    sample_data = [3, 6, 8, 10, 1, 2, 1]\n    sorted_data = quick_sort(sample_data)\n    print(\"Sorted Output:\", sorted_data)\n"
+  },
+  {
+    "id": "file_demo_js",
+    "filename": "app_logic.js",
+    "original_name": "app_logic.js",
+    "extension": ".js",
+    "language": "javascript",
+    "size_bytes": 360,
+    "uploaded_at": "2026-07-28T21:39:21.614100",
+    "content": "// Developer Assistant JS Demo\nfunction calculateStats(items) {\n    if (!Array.isArray(items)) {\n        throw new Error(\"Invalid input: expected array\");\n    }\n    const total = items.reduce((acc, curr) => acc + curr, 0);\n    const average = total / items.length;\n    return { total, average, count: items.length };\n}\n\nconsole.log(calculateStats([10, 20, 30, 40, 50]));\n"
+  },
+  {
+    "id": "file_demo_json",
+    "filename": "config.json",
+    "original_name": "config.json",
+    "extension": ".json",
+    "language": "json",
+    "size_bytes": 220,
+    "uploaded_at": "2026-07-28T21:39:21.614104",
+    "content": "{\n  \"appName\": \"AI Code Refactoring Assistant\",\n  \"version\": \"1.0.0-MVP\",\n  \"theme\": \"dark\",\n  \"autoSave\": true,\n  \"maxUploadSizeMB\": 5,\n  \"supportedLanguages\": [\"python\", \"javascript\", \"typescript\", \"java\", \"cpp\", \"c\", \"html\", \"css\", \"json\"]\n}"
+  }
+]

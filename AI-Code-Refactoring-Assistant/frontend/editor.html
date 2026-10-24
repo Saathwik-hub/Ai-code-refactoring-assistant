@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Editor - AI Code Refactoring Assistant</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Monaco Editor AMD Loader from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body style="overflow: hidden;">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link active">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link">AI Refactor</a></li>
+      <li><a href="optimizer.html" class="nav-link">Code Optimizer</a></li>
+      <li><a href="settings.html" class="nav-link">Settings</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">☀️</button>
+      <span id="nav-user-badge" style="font-weight: 600; font-size: 0.85rem; color: var(--primary-blue);">demodev</span>
+      <a href="dashboard.html" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- Monaco Editor Main Workspace -->
+  <div class="editor-wrapper">
+
+    <!-- Collapsible Sidebar File Explorer -->
+    <aside class="file-explorer">
+      <div class="explorer-header">
+        <span>EXPLORER</span>
+        <div class="explorer-actions">
+          <button id="btn-create-file" class="explorer-btn" title="Create New File">➕</button>
+          <button onclick="document.getElementById('hidden-file-input').click()" class="explorer-btn" title="Upload File">📤</button>
+        </div>
+      </div>
+
+      <ul id="explorer-file-list" class="file-list">
+        <!-- Populated by fileManager.js -->
+      </ul>
+
+      <input type="file" id="hidden-file-input" style="display: none;" accept=".py,.java,.js,.ts,.cpp,.c,.html,.css,.json">
+    </aside>
+
+    <!-- Editor Workspace Main Content -->
+    <main class="editor-main">
+      <!-- Editor Top Toolbar -->
+      <div class="editor-toolbar">
+        <div class="active-file-title">
+          <span>📄</span>
+          <span id="active-file-name">demo_algorithm.py</span>
+        </div>
+
+        <div class="toolbar-controls">
+          <!-- Manual Language Selector -->
+          <select id="editor-lang-select" class="select-input" title="Select Code Language">
+            <option value="python">Python (.py)</option>
+            <option value="javascript">JavaScript (.js)</option>
+            <option value="typescript">TypeScript (.ts)</option>
+            <option value="java">Java (.java)</option>
+            <option value="cpp">C++ (.cpp)</option>
+            <option value="c">C (.c)</option>
+            <option value="html">HTML (.html)</option>
+            <option value="css">CSS (.css)</option>
+            <option value="json">JSON (.json)</option>
+          </select>
+
+          <!-- Action Buttons -->
+          <button id="btn-validate-syntax" class="btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.85rem;" title="Run Syntax Check">
+            <span>⚡ Check Syntax</span>
+          </button>
+          <button id="btn-download-code" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" title="Download Snippet">
+            <span>💾 Save / Download</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Monaco Container Box -->
+      <div class="monaco-container-box">
+        <div id="monaco-editor-target"></div>
+      </div>
+
+      <!-- Bottom Diagnostics & Output Panel -->
+      <div class="diagnostics-panel" id="diagnostics-panel">
+        <div class="diagnostics-header">
+          <ul class="diagnostics-tabs">
+            <li class="diagnostics-tab active" id="tab-syntax">Syntax Diagnostics (<span id="diag-error-count">0</span> Errors, <span id="diag-warn-count">0</span> Warnings)</li>
+          </ul>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Phase 1 Syntax Engine</div>
+        </div>
+
+        <div class="diagnostics-content" id="diagnostics-output-list">
+          <div class="diag-item diag-success">
+            <span>✅</span> <span>Syntax validation clean. Ready for Phase 2 AI Refactoring engine.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor Bottom Statusbar -->
+      <div class="editor-statusbar">
+        <div class="statusbar-section">
+          <span id="status-cursor-pos">Ln 1, Col 1</span>
+          <span>UTF-8</span>
+          <span id="status-language">PYTHON</span>
+        </div>
+        <div class="statusbar-section">
+          <span id="status-diagnostics" style="color: #10b981;">✓ Syntax OK</span>
+          <span>Monaco v0.45</span>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/fileManager.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

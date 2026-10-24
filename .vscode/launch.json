@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against Refactor.AI (Port 8000)",
+            "url": "http://localhost:8000",
+            "webRoot": "${workspaceFolder}/AI-Code-Refactoring-Assistant/frontend"
+        },
+        {
+            "name": "Python: FastAPI Backend",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "backend.app:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "cwd": "${workspaceFolder}/AI-Code-Refactoring-Assistant",
+            "jinja": true
+        }
+    ]
+}

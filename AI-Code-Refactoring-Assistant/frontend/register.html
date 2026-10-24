@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - AI Code Refactoring Assistant</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .auth-container {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 2.25rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px var(--primary-blue-glow);
+    }
+    .input-with-icon {
+      position: relative;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+    .error-alert {
+      padding: 0.75rem 1rem;
+      background-color: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger-red);
+      color: var(--danger-red);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+    </a>
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">☀️</button>
+      <a href="login.html" class="btn btn-outline">Log In</a>
+    </div>
+  </nav>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: 1.75rem;">
+        <h1 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.4rem;">Create Account</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Join AI Code Refactoring Assistant</p>
+      </div>
+
+      <div id="auth-error" class="error-alert"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input type="text" id="username" class="form-input" placeholder="code_wizard" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-input" placeholder="dev@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-with-icon">
+            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Password Visibility">👁️</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm-password">Confirm Password</label>
+          <div class="input-with-icon">
+            <input type="password" id="confirm-password" class="form-input" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Password Visibility">👁️</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1rem; margin-top: 0.5rem;">Register Now</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-muted);">
+        Already have an account? <a href="login.html" style="font-weight: 600;">Log In here</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

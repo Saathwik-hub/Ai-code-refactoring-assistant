@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Optimizer &amp; Complexity Reducer - Refactor.AI</title>
+  <meta name="description" content="Optimize big and complex code to minimal, readable code with reduced time complexity. Automatically separates frontend and backend files for easy revision.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/diff.css">
+  <link rel="stylesheet" href="css/optimizer.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Global Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="brand-icon">&#9889;</div>
+      <span>Refactor<span style="color: var(--primary-blue)">.AI</span></span>
+      <span class="brand-badge">Optimizer</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      <li><a href="editor.html" class="nav-link">Code Editor</a></li>
+      <li><a href="analysis-dashboard.html" class="nav-link">Analysis</a></li>
+      <li><a href="ai-refactor.html" class="nav-link">AI Refactor</a></li>
+      <li><a href="optimizer.html" class="nav-link active">Code Optimizer</a></li>
+      <li><a href="history.html" class="nav-link">History</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle-btn" title="Switch Theme">&#9728;&#65039;</button>
+      <span id="nav-user-badge" style="font-weight:600;font-size:0.9rem;color:var(--primary-blue);">demodev</span>
+      <button id="logout-btn" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Log Out</button>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top:2rem;padding-bottom:5rem;">
+    <!-- Hero / Header -->
+    <div class="optimizer-hero">
+      <div class="optimizer-badge">&#9889; High-Performance Engine</div>
+      <h1 style="font-size:2rem;font-weight:800;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;">
+        <span>Code Optimizer &amp; Complexity Reducer</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:1rem;max-width:800px;line-height:1.6;">
+        Transform bloated, complex code into minimal, high-speed implementations. Automatically cuts time complexity (e.g., <strong>O(n²) &rarr; O(n)</strong>), eliminates dead code, and provides <strong>separate frontend and backend files</strong> so you can revise both seamlessly.
+      </p>
+    </div>
+
+    <!-- Quick Presets -->
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">
+        Quick Test Presets (Click to load big code):
+      </div>
+      <div class="presets-container" id="presets-list">
+        <!-- Populated by optimizer.js -->
+      </div>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="optimizer-grid">
+      <!-- LEFT: Code Input & Action -->
+      <div>
+        <!-- Ollama AI Integration & Status Bar -->
+        <div class="card" style="padding:0.85rem 1.25rem;margin-bottom:1rem;background:var(--bg-secondary);border:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span id="ollama-status-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#eab308;" title="Checking Ollama..."></span>
+            <div>
+              <span id="ollama-status-label" style="font-weight:700;font-size:0.875rem;color:var(--text-main);">Ollama: Detecting...</span>
+              <span id="ollama-status-sub" style="font-size:0.75rem;color:var(--text-muted);display:block;">Local AI engine for code optimization</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:0.4rem;">
+              <label for="optimizer-model" style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Model:</label>
+              <select id="optimizer-model" class="select-input" style="padding:0.3rem 0.6rem;font-size:0.82rem;min-width:160px;">
+                <option value="auto">Auto-Detect Installed Model</option>
+                <option value="qwen2.5-coder">Qwen2.5-Coder (Default)</option>
+                <option value="deepseek-coder">DeepSeek-Coder</option>
+                <option value="codellama">CodeLlama</option>
+                <option value="llama3">Llama 3</option>
+              </select>
+            </div>
+            <button id="btn-refresh-ollama" class="btn btn-outline" style="padding:0.3rem 0.65rem;font-size:0.8rem;" title="Refresh models from Ollama server">
+              &#128260; Check Connection
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <h2 style="font-size:1.15rem;font-weight:700;">Source Code (Big / Complex Code)</h2>
+              <span style="font-size:0.75rem;padding:0.15rem 0.5rem;border-radius:4px;background:var(--bg-tertiary);color:var(--text-muted);">Paste Here</span>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <label for="optimizer-lang" style="font-size:0.85rem;color:var(--text-muted);">Language:</label>
+              <select id="optimizer-lang" class="select-input" style="padding:0.35rem 0.6rem;font-size:0.85rem;">
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+              </select>
+            </div>
+          </div>
+
+          <textarea id="optimizer-input" placeholder="Paste your big code snippet here... (e.g. nested loops, recursive functions, or fullstack code)" style="width:100%;height:320px;padding:1rem;background:var(--bg-primary);color:var(--text-main);border:1px solid var(--border-color);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:0.875rem;line-height:1.7;resize:vertical;outline:none;tab-size:4;"></textarea>
+
+          <div style="display:flex;gap:0.75rem;margin-top:1.25rem;flex-wrap:wrap;">
+            <button id="btn-run-optimizer" class="btn btn-primary" style="flex:2;min-width:200px;font-size:1rem;padding:0.75rem 1.25rem;">
+              <span>&#9889; Optimize &amp; Reduce Complexity</span>
+            </button>
+            <button id="btn-clear-optimizer" class="btn btn-outline" style="flex:1;min-width:100px;padding:0.75rem 1rem;">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- RESULTS SECTION (Initially hidden) -->
+        <div id="optimizer-results" style="display:none;">
+          <!-- Metrics Banner -->
+          <div class="metrics-banner" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+            <div class="metric-card">
+              <div class="metric-label">Time Complexity</div>
+              <div class="metric-val" id="metric-complexity">
+                <span class="badge-complexity-old">O(n²)</span> &rarr; <span class="badge-complexity-new">O(n)</span>
+              </div>
+              <div class="metric-sub" id="result-summary-text">Time complexity reduced.</div>
+            </div>
+
+            <div class="metric-card speedup">
+              <div class="metric-label">Estimated Speedup</div>
+              <div class="metric-val" id="metric-speedup" style="font-size:1.15rem;color:#f59e0b;">
+                ~1,000x - 100,000x
+              </div>
+              <div class="metric-sub">Theoretical acceleration on large data</div>
+            </div>
+
+            <div class="metric-card reduction">
+              <div class="metric-label">Code Minimality</div>
+              <div class="metric-val" id="metric-reduction" style="color:#8b5cf6;">
+                -45% smaller
+              </div>
+              <div class="metric-sub">Boilerplate &amp; redundancies eliminated</div>
+            </div>
+
+            <div class="metric-card engine" style="border-left: 3px solid #10b981;">
+              <div class="metric-label">Optimizer Engine</div>
+              <div class="metric-val" id="metric-engine" style="font-size:1.05rem;color:#10b981;">
+                Ollama AI
+              </div>
+              <div class="metric-sub" id="metric-engine-sub">Deep algorithmic complexity reduction</div>
+            </div>
+          </div>
+
+
+          <!-- Separation Notice -->
+          <div class="separation-notice">
+            <span style="font-size:1.5rem;">&#128193;</span>
+            <div>
+              <strong>Separated Revision Files Generated:</strong>
+              <div id="separation-note-text" style="color:var(--text-muted);font-size:0.85rem;margin-top:0.2rem;">
+                Review and revise the separate Frontend Client and Backend Service files in the tabs below.
+              </div>
+            </div>
+          </div>
+
+          <!-- Result Tabs -->
+          <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+            <div class="tabs-nav">
+              <button class="tab-btn active" data-tab="optimized">
+                <span>&#9889;</span> Optimized Code
+              </button>
+              <button class="tab-btn" data-tab="frontend">
+                <span>&#127760;</span> Frontend File (Revise UI)
+              </button>
+              <button class="tab-btn" data-tab="backend">
+                <span>&#9881;</span> Backend File (Revise API/Service)
+              </button>
+              <button class="tab-btn" data-tab="diff">
+                <span>&#9878;</span> Side-by-Side Diff
+              </button>
+              <button class="tab-btn" data-tab="changes">
+                <span>&#128221;</span> Optimization Breakdown
+              </button>
+            </div>
+
+            <!-- Tab 1: Optimized Code -->
+            <div class="tab-content-pane active" id="pane-optimized">
+              <div class="code-box-header">
+                <span style="font-weight:700;font-size:0.9rem;color:var(--text-main);">Consolidated Minimal Code</span>
+                <div style="display:flex;gap:0.5rem;">
+                  <button id="btn-copy-optimized" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Copy</button>
+                  <button id="btn-download-optimized" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Download</button>
+                  <button id="btn-send-to-editor" class="btn btn-primary" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Open in Editor &rarr;</button>
+                </div>
+              </div>
+              <pre class="code-box-pre" id="code-display-optimized"></pre>
+            </div>
+
+            <!-- Tab 2: Frontend File -->
+            <div class="tab-content-pane" id="pane-frontend">
+              <div class="code-box-header">
+                <div>
+                  <span style="font-weight:700;font-size:0.9rem;color:var(--text-main);">Frontend File (HTML5 / Client UI)</span>
+                  <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.5rem;">frontend_app.html</span>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                  <button id="btn-copy-frontend" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Copy Frontend File</button>
+                  <button id="btn-download-frontend" class="btn btn-primary" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Download .html</button>
+                </div>
+              </div>
+              <pre class="code-box-pre" id="code-display-frontend"></pre>
+            </div>
+
+            <!-- Tab 3: Backend File -->
+            <div class="tab-content-pane" id="pane-backend">
+              <div class="code-box-header">
+                <div>
+                  <span style="font-weight:700;font-size:0.9rem;color:var(--text-main);">Backend File (Service &amp; Algorithm Module)</span>
+                  <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.5rem;">backend_service.py</span>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                  <button id="btn-copy-backend" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Copy Backend File</button>
+                  <button id="btn-download-backend" class="btn btn-primary" style="padding:0.4rem 0.8rem;font-size:0.85rem;">Download Backend File</button>
+                </div>
+              </div>
+              <pre class="code-box-pre" id="code-display-backend"></pre>
+            </div>
+
+            <!-- Tab 4: Side-by-Side Diff -->
+            <div class="tab-content-pane" id="pane-diff">
+              <div id="diff-view-mount"></div>
+            </div>
+
+            <!-- Tab 5: Changelog & Breakdown -->
+            <div class="tab-content-pane" id="pane-changes">
+              <div id="changes-list-mount"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR: Info & Cheatsheet -->
+      <div>
+        <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:1rem;color:var(--text-main);display:flex;align-items:center;gap:0.5rem;">
+            <span>&#128065;</span> How Optimization Works
+          </h3>
+          <ul style="list-style:none;padding:0;margin:0;font-size:0.88rem;color:var(--text-muted);line-height:1.7;">
+            <li style="margin-bottom:0.75rem;">
+              <strong style="color:var(--text-main);">&#9889; Nested Loop Reduction:</strong>
+              Converts O(n²) quadratic lookups into O(n) Hash Map and Set intersections.
+            </li>
+            <li style="margin-bottom:0.75rem;">
+              <strong style="color:var(--text-main);">&#128640; Recursion Memoization:</strong>
+              Converts O(2ⁿ) naive exponential recursion to O(n) memoized dynamic programming.
+            </li>
+            <li style="margin-bottom:0.75rem;">
+              <strong style="color:var(--text-main);">&#129529; Code Minimization:</strong>
+              Eliminates dead code, replaces verbose loops with idioms, and merges redundant statements.
+            </li>
+            <li style="margin-bottom:0.5rem;">
+              <strong style="color:var(--text-main);">&#128194; File Separation:</strong>
+              Decouples client interaction (Frontend) from business logic (Backend) for easy independent revision.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" style="padding:1.5rem;border-left:4px solid var(--primary-blue);">
+          <h4 style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--text-main);">Complexity Reference</h4>
+          <div style="font-size:0.82rem;font-family:var(--font-mono);line-height:1.8;">
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.2rem 0;">
+              <span style="color:#ef4444;">O(2ⁿ)</span>
+              <span>Exponential (Slowest)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.2rem 0;">
+              <span style="color:#f97316;">O(n²)</span>
+              <span>Quadratic (Nested loops)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.2rem 0;">
+              <span style="color:#f59e0b;">O(n log n)</span>
+              <span>Linearithmic (Sorting)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.2rem 0;">
+              <span style="color:#10b981;">O(n)</span>
+              <span>Linear (Target Optimal)</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.2rem 0;">
+              <span style="color:#38bdf8;">O(1)</span>
+              <span>Constant (Hash Lookup)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/optimizer.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "appName": "AI Code Refactoring Assistant",
+  "version": "1.0.0-MVP",
+  "theme": "dark",
+  "autoSave": true,
+  "maxUploadSizeMB": 5,
+  "supportedLanguages": ["python", "javascript", "typescript", "java", "cpp", "c", "html", "css", "json"]
+}
